@@ -38,7 +38,7 @@ open("bayesprot-import.sh","w") do f
   write(f,"#\$ -m bes\n")
   write(f,"#\$ -l h_vmem=8G,h_rt=01:00:00\n")
   write(f,"cd import/results\n")
-  write(f,"Rscript ../../import.R HPC")
+  write(f,"Rscript ../../importTMT.R HPC")
 end
 
 qsubReturn = readall(`qsub -hold_jid $importSetupJobID bayesprot-import.sh`)
