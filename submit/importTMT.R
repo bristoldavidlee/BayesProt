@@ -47,6 +47,8 @@ if (length(commandArgs(T)) > 0 & commandArgs(T)[1]=="HPC")
       channelNames = c('126', '127N', '127C', '128N', '128C', '129N', '129C', '130N', '130C', '131')
     }
 
+    data <- data[complete.cases(data[,mvars]),]
+
     # extract data for mixed model
     data.tmp <- melt(data.one, variable.name='Channel', value.name='Area',measure.vars=mvars)
 
