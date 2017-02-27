@@ -33,7 +33,7 @@ if (length(commandArgs(T)) > 0 & commandArgs(T)[1]=="HPC")
         data.one <- data.one[data.one$Peptide %in% names(tb[order(tb, decreasing=T)])[1:as.integer(parameters$Value[parameters$Key=="max_peptides"])],]
     }
 
-    isiTraq = length(grep('Area',colnames(data),value=T)) > 1
+    isiTraq = length(grep('Area',colnames(data.one),value=T)) > 1
     mvars = c()
     if (isiTraq) {
       mvars = c('Area.113', 'Area.114', 'Area.115', 'Area.116', 'Area.117','Area.118','Area.119','Area.121')
@@ -47,7 +47,7 @@ if (length(commandArgs(T)) > 0 & commandArgs(T)[1]=="HPC")
       channelNames = c('126', '127N', '127C', '128N', '128C', '129N', '129C', '130N', '130C', '131')
     }
 
-    data <- data[complete.cases(data[,mvars]),]
+    data.one <- data.one[complete.cases(data.one[,mvars]),]
 
     # extract data for mixed model
     data.tmp <- melt(data.one, variable.name='Channel', value.name='Area',measure.vars=mvars)
