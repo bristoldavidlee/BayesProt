@@ -46,6 +46,7 @@ data <- read.table(args[2],header=T,sep='\t',quote='"',strip.white=T,check.names
 #data <- data[data$Used==1,]
 
 data <- data[data$Peptide.Quan.Usage=="Use",]
+data <- data[data$Quan.Info=="Unique",]
 
 # filter out decoys
 #data <- data[!grepl("^RRRRR.*",data$Accessions),]
@@ -110,6 +111,18 @@ if (!"N" %in% colnames(data))
 
   data<-merge(data,data.tmp, by = "Master.Protein.Accessions")
 }
+
+#Remove spectra with NA values
+isiTraq = length(grep('Area',colnames(data),value=T)) > 1
+mvars = c()
+if (isiTraq) {
+  mvars = c('Area.113', 'Area.114', 'Area.115', 'Area.116', 'Area.117','Area.118','Area.119','Area.121')
+} else {
+  mvars = c('X126', 'X127N', 'X127C', 'X128N', 'X128C', 'X129N', 'X129C', 'X130N', 'X130C', 'X131')
+}
+
+data <- data[complete.cases(data[,mvars]),]
+
 
 # filter by min_spectra and min_peptides
 if("min_spectra" %in% parameters$Key)
