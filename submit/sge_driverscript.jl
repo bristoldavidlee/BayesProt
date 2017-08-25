@@ -98,7 +98,7 @@ open("bayesprot-exposures.sh","w") do f
   write(f,"#\$ -e exposures/error\n")
   write(f,"#\$ -M "*email*"\n")
   write(f,"#\$ -m bes\n")
-  write(f,"#\$ -l h_vmem=8G,h_rt=01:00:00\n")
+  write(f,"#\$ -l h_vmem=8G,h_rt=12:00:00\n")
   write(f,"cd exposures/results\n")
   write(f,"Rscript ../../exposures.R HPC")
 end
@@ -128,7 +128,7 @@ open("bayesprot-model.sh","w") do f
   write(f,"#\$ -V -cwd\n")
   write(f,"#\$ -o model/out\n")
   write(f,"#\$ -e model/error\n")
-  write(f,"#\$ -l h_vmem=8G,h_rt=24:00:00\n")
+  write(f,"#\$ -l h_vmem=16G,h_rt=48:00:00\n")
   write(f,"sh model/model-job\$SGE_TASK_ID.sh")
 end
 
