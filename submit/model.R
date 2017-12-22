@@ -18,7 +18,7 @@ model <- function(protein_id,design,exposures,use_exposure_sd,chain,nchain,seed,
   ee <- merge(ee,exposures,all.x=T)
   ee$mean[is.na(ee$mean)] <- 0.0
   ee$var <- ifelse(rep(use_exposure_sd,nrow(ee)), ee$sd * ee$sd, NA)
-  ee$var[is.na(ee$var)] <- 1e-6
+  ee$var[is.na(ee$var)] <- 1e-5
   
   # adjust for intended volume differences between runchannels
   ee <- ddply(ee, .(RunChannel), function(x) {
@@ -57,14 +57,14 @@ model <- function(protein_id,design,exposures,use_exposure_sd,chain,nchain,seed,
   # level is not important (as it is always mean 0, var 1e-6)
     
   prior <- list(
-    B = list(mu = matrix(0,nRC+nS+nC-2,1),V = diag(nRC+nS+nC-2) * 1e+6),
+    B = list(mu = matrix(0,nRC+nS+nC-2,1),V = diag(nRC+nS+nC-2) * 1e+5),
     G = list(G1 = list(V = diag(population.vars), nu = nO, alpha.mu = rep(0,nO),  alpha.V = diag(1000,nO)),
              #G2 = list(V = diag(nD), nu = nD, alpha.mu = rep(0,nD),  alpha.V = diag(1000,nD)),
              G2 = list(V = diag(nP), nu = nP, alpha.mu = rep(0,nP),  alpha.V = diag(1000,nP))),
     R = list(V = diag(nS), nu = 0.002)
   )
   prior$B$mu[(nS+1):(nS+nRC-1)] <- ee$mean[2:nRC]
-  diag(prior$B$V)[(nS+1):(nS+nRC-1)] <- ee$var[2:nRC]              
+  diag(prior$B$V)[(nS+1):(nS+nRC-1)] <- ee$var[2:nRC]
   model <- suppressWarnings(MCMCglmm(
     as.formula(paste0("Count ~ ", ifelse(nS==1, "", "Spectrum-1 + "), "RunChannel + Condition")),
     #random = as.formula(paste0(ifelse(nO==1, "~ Sample ", "~idh(Population):Sample "), " + idh(Digest):Peptide", ifelse(nP==1, " + Digest", " + idh(Peptide):Digest"))),
